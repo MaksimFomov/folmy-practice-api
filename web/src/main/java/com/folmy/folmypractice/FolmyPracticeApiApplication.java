@@ -1,4 +1,4 @@
-package com.folmy.folmy_practice_api;
+package com.folmy.folmypractice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
