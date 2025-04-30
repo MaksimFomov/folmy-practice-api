@@ -3,6 +3,7 @@ package com.folmy.folmypractice.model;
 import com.folmy.folmypractice.enums.LevelInDevelopment;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -49,7 +51,14 @@ public class User {
     @Column(name = "time_zone", nullable = false)
     private ZoneId timeZone;
 
-    //Рассчитывается автоматически(Доработать)
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    @ManyToMany(mappedBy = "members")
+    private List<Team> teams;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

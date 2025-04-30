@@ -2,6 +2,7 @@ package com.folmy.folmypractice.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "teams")
 public class Team {
@@ -22,7 +24,7 @@ public class Team {
     private String teamName;
 
     //Рассчитывается автоматически(Доработать)
-    @Column(name = "team_number", nullable = false)
+    @Column(name = "team_number", nullable = false, unique = true)
     private String teamNumber;
 
     @OneToOne
@@ -37,7 +39,11 @@ public class Team {
     )
     private List<User> members;
 
-    //Рассчитывается автоматически(Доработать)
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }
