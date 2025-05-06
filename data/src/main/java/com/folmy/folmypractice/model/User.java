@@ -42,6 +42,14 @@ public class User {
     @Column(name = "directions_in_development", nullable = false)
     private List<String> directionsInDevelopment;
 
+    @ElementCollection
+    @CollectionTable(
+            name = "user_skills",
+            joinColumns = @JoinColumn(name = "user_id")
+    )
+    @Column(name = "skills", nullable = false)
+    private List<String> skills;
+
     @Column(name = "level_in_development", nullable = false)
     private LevelInDevelopment levelInDevelopment;
 
@@ -54,11 +62,15 @@ public class User {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
     @ManyToMany(mappedBy = "members")
     private List<Team> teams;
 
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 }

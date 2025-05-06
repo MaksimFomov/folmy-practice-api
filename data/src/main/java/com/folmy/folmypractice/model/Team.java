@@ -20,12 +20,12 @@ public class Team {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(name = "team_name")
-    private String teamName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     //Рассчитывается автоматически(Доработать)
-    @Column(name = "team_number", nullable = false, unique = true)
-    private String teamNumber;
+    @Column(name = "number", nullable = false, unique = true)
+    private String number;
 
     @OneToOne
     @JoinColumn(name = "project_id")
@@ -42,8 +42,12 @@ public class Team {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 }
