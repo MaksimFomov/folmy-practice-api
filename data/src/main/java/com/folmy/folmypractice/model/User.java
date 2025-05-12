@@ -1,19 +1,21 @@
 package com.folmy.folmypractice.model;
 
 import com.folmy.folmypractice.enums.LevelInDevelopment;
+import com.folmy.folmypractice.enums.Role;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "users")
 public class User {
@@ -22,11 +24,21 @@ public class User {
     @Column(name = "id", nullable = false)
     private UUID id;
 
+    @Column( name = "username", nullable = false, unique = true)
+    private String username;
+
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password_hash", nullable = false)
-    private String passwordHash;
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private Set<Role> roles;
 
     @Column(name = "full_name", nullable = false)
     private String fullName;
@@ -59,10 +71,10 @@ public class User {
     @Column(name = "time_zone", nullable = false)
     private ZoneId timeZone;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @ManyToMany(mappedBy = "members")

@@ -46,7 +46,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     private String generateNextTeamNumber() {
-        String maxNumber = teamRepository.findMaxTeamNumber();
+        String maxNumber = "1";
 
         int nextNumber = 1;
         if (maxNumber != null) {
