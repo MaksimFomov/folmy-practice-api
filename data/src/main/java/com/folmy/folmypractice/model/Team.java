@@ -1,9 +1,9 @@
 package com.folmy.folmypractice.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,7 +11,9 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "teams")
 public class Team {
@@ -23,7 +25,6 @@ public class Team {
     @Column(name = "name", nullable = false)
     private String name;
 
-    //Рассчитывается автоматически(Доработать)
     @Column(name = "number", nullable = false, unique = true)
     private String number;
 
@@ -39,15 +40,11 @@ public class Team {
     )
     private List<User> members;
 
+    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
 }

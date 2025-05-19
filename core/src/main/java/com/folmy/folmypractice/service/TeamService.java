@@ -24,5 +24,5 @@ public interface TeamService {
 
     void addProjectToTeamById(UUID teamUUID, UUID projectUUID);
 
-    void deleteProjectFromTeamById(UUID teamUUID, UUID projectUUID);
+    void deleteProjectFromTeamById(UUID teamUUID);
 }
