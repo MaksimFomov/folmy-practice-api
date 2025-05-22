@@ -4,6 +4,8 @@ import com.folmy.folmypractice.enums.LevelInDevelopment;
 import com.folmy.folmypractice.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -71,18 +73,14 @@ public class User {
     @Column(name = "time_zone", nullable = false)
     private ZoneId timeZone;
 
+    @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @ManyToMany(mappedBy = "members")
     private List<Team> teams;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
 }

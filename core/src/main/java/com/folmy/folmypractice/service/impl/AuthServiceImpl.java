@@ -2,6 +2,7 @@ package com.folmy.folmypractice.service.impl;
 
 import com.folmy.folmypractice.configuration.JwtUtils;
 import com.folmy.folmypractice.enums.Role;
+import com.folmy.folmypractice.exception.conflict.NameAlreadyExistsException;
 import com.folmy.folmypractice.model.User;
 import com.folmy.folmypractice.repository.UserRepository;
 import com.folmy.folmypractice.service.AuthService;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -28,11 +30,13 @@ public class AuthServiceImpl implements AuthService {
         this.jwtUtils = jwtUtils;
     }
 
+    @Transactional
     @Override
     public void register(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
-            throw new RuntimeException("User with this name already exists");
+            throw new NameAlreadyExistsException("User with name " + user.getUsername() + " already exists");
         }
+
         User newUser = User.builder()
                 .username(user.getUsername())
                 .email(user.getEmail())
@@ -46,9 +50,11 @@ public class AuthServiceImpl implements AuthService {
                 .hoursAvailablePerWeek(user.getHoursAvailablePerWeek())
                 .timeZone(user.getTimeZone())
                 .build();
+
         userRepository.save(newUser);
     }
 
+    @Transactional
     @Override
     public String login(String login, String password) {
         Authentication auth = authManager.authenticate(
@@ -56,6 +62,7 @@ public class AuthServiceImpl implements AuthService {
                         login, password));
         var principal = (org.springframework.security.core.userdetails.User)
                 auth.getPrincipal();
+
         return jwtUtils.generateToken(principal);
     }
 }

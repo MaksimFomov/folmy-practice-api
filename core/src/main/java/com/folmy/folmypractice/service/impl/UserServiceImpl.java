@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,17 +23,20 @@ public class UserServiceImpl implements UserService {
         this.encoder = encoder;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public User getUserByUUID(UUID userUUID) {
         return userRepository.findById(userUUID)
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID" + userUUID));
     }
 
+    @Transactional
     @Override
     public void passwordChange(String oldPassword, String newPassword) {
         Authentication auth = SecurityContextHolder

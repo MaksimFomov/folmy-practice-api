@@ -5,6 +5,7 @@ import com.folmy.folmypractice.model.Project;
 import com.folmy.folmypractice.repository.ProjectRepository;
 import com.folmy.folmypractice.service.ProjectService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,22 +19,26 @@ public class ProjectServiceImpl implements ProjectService {
         this.projectRepository = projectRepository;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Project> getAllProjects() {
         return projectRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Project getProjectById(UUID projectUUID) {
         return projectRepository.findById(projectUUID)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found with ID: " + projectUUID));
     }
 
+    @Transactional
     @Override
     public Project createProject(Project newProject) {
         return projectRepository.save(newProject);
     }
 
+    @Transactional
     @Override
     public Project updateProjectById(UUID projectUUID, Project updatedProject) {
         Project existingProject = getProjectById(projectUUID);
@@ -41,11 +46,11 @@ public class ProjectServiceImpl implements ProjectService {
         existingProject.setTitle(updatedProject.getTitle());
         existingProject.setBriefDescription(updatedProject.getBriefDescription());
         existingProject.setTermsOfReference(updatedProject.getTermsOfReference());
-        existingProject.setUpdatedAt(LocalDateTime.now());
 
-        return projectRepository.save(existingProject);
+        return existingProject;
     }
 
+    @Transactional
     @Override
     public void deleteProjectById(UUID projectUUID) {
         projectRepository.delete(getProjectById(projectUUID));
