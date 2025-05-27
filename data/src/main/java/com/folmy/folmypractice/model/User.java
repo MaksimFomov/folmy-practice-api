@@ -26,7 +26,7 @@ public class User {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column( name = "username", nullable = false, unique = true)
+    @Column( name = "username", nullable = false, unique = true, length = 30)
     private String username;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -42,10 +42,10 @@ public class User {
     @Column(name = "role")
     private Set<Role> roles;
 
-    @Column(name = "full_name", nullable = false)
+    @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;
 
-    @Column(name = "about_me")
+    @Column(name = "about_me", length = 500)
     private String aboutMe;
 
     @ElementCollection
@@ -68,7 +68,7 @@ public class User {
     private LevelInDevelopment levelInDevelopment;
 
     @Column(name = "hours_available_per_week", nullable = false)
-    private Integer hoursAvailablePerWeek;
+    private int hoursAvailablePerWeek;
 
     @Column(name = "time_zone", nullable = false)
     private ZoneId timeZone;

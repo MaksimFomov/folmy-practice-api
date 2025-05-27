@@ -3,20 +3,20 @@ package com.folmy.folmypractice.service.impl;
 import com.folmy.folmypractice.exception.conflict.NameAlreadyExistsException;
 import com.folmy.folmypractice.exception.conflict.TeamIsTiedException;
 import com.folmy.folmypractice.exception.notfound.TeamNotFoundException;
+import com.folmy.folmypractice.exception.notfound.UserNotFoundException;
 import com.folmy.folmypractice.exception.validation.EmptyMemberSet;
 import com.folmy.folmypractice.model.Project;
 import com.folmy.folmypractice.model.Team;
 import com.folmy.folmypractice.model.User;
 import com.folmy.folmypractice.repository.TeamRepository;
+import com.folmy.folmypractice.repository.UserRepository;
 import com.folmy.folmypractice.service.ProjectService;
 import com.folmy.folmypractice.service.TeamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -24,9 +24,13 @@ public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
     private final ProjectService projectService;
 
-    public TeamServiceImpl(TeamRepository teamRepository, ProjectService projectService) {
+    private final UserRepository userRepository;
+
+    public TeamServiceImpl(TeamRepository teamRepository, ProjectService projectService,
+                           UserRepository userRepository) {
         this.teamRepository = teamRepository;
         this.projectService = projectService;
+        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
@@ -59,7 +63,7 @@ public class TeamServiceImpl implements TeamService {
 
     private String generateNextTeamNumber() {
         final int CODE_LENGTH = 4;
-        String last = teamRepository.findMaxTeamCode()
+        String last = teamRepository.findFirstByOrderByNumberDesc()
                 .orElse(String.join("", Collections.nCopies(CODE_LENGTH, "0")));
         int value = Integer.parseInt(last, 36) + 1;
         String next = Integer.toString(value, 36).toUpperCase();
@@ -90,12 +94,17 @@ public class TeamServiceImpl implements TeamService {
 
     @Transactional
     @Override
-    public void addMembersToTeamById(UUID teamUUID, Set<User> members) {
-        if(CollectionUtils.isEmpty(members)) {
+    public void addMembersToTeamById(UUID teamUUID, List<UUID> memberIds) {
+        if(memberIds.isEmpty()) {
             throw new EmptyMemberSet("The set of participants cannot be empty");
         }
 
         Team existingTeam = getTeamById(teamUUID);
+
+        List<User> members = userRepository.findAllById(memberIds);
+        if (members.size() != memberIds.size()) {
+            throw new UserNotFoundException("One or more users not found");
+        }
 
         members.stream()
                 .filter(member -> existingTeam.getMembers().add(member))
@@ -104,13 +113,14 @@ public class TeamServiceImpl implements TeamService {
 
     @Transactional
     @Override
-    public void deleteMembersFromTeamById(UUID teamUUID, Set<User> members) {
-        if(CollectionUtils.isEmpty(members)) {
+    public void deleteMembersFromTeamById(UUID teamUUID, List<UUID> memberIds) {
+        if(memberIds.isEmpty()) {
             throw new EmptyMemberSet("The set of participants cannot be empty");
         }
 
         Team existingTeam = getTeamById(teamUUID);
 
+        List<User> members = userRepository.findAllById(memberIds);
         members.stream()
                 .filter(existingTeam.getMembers()::remove)
                 .forEach(member -> member.getTeams().remove(existingTeam));

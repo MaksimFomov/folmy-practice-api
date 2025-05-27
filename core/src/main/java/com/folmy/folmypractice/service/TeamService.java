@@ -1,10 +1,8 @@
 package com.folmy.folmypractice.service;
 
 import com.folmy.folmypractice.model.Team;
-import com.folmy.folmypractice.model.User;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public interface TeamService {
@@ -18,9 +16,9 @@ public interface TeamService {
 
     void deleteTeamById(UUID teamUUID);
 
-    void addMembersToTeamById(UUID teamUUID, Set<User> members);
+    void addMembersToTeamById(UUID teamUUID, List<UUID> memberIds);
 
-    void deleteMembersFromTeamById(UUID teamUUID, Set<User> members);
+    void deleteMembersFromTeamById(UUID teamUUID, List<UUID> memberIds);
 
     void addProjectToTeamById(UUID teamUUID, UUID projectUUID);
 

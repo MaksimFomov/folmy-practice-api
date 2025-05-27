@@ -10,8 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface TeamRepository extends JpaRepository<Team, UUID> {
-    @Query("SELECT MAX(t.code) FROM Team t")
-    Optional<String> findMaxTeamCode();
+    Optional<String> findFirstByOrderByNumberDesc();
 
     boolean existsByName(String teamName);
 }

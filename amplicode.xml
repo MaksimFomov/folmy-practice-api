@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AmplicodePersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit moduleName="web" name="Default">
+        <packages>
+          <package value="com.folmy.folmypractice.model" />
+        </packages>
+      </persistence-unit>
+      <persistence-unit moduleName="core" name="Default">
+        <packages>
+          <package value="com.folmy.folmypractice.configuration" />
+        </packages>
+      </persistence-unit>
+      <persistence-unit moduleName="data" name="Default" />
+    </persistence-units>
+  </component>
+</project>

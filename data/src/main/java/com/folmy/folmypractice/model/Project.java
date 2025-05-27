@@ -27,8 +27,8 @@ public class Project {
     @Column(name = "brief_description", nullable = false)
     private String briefDescription;
 
-    @Column(name = "terms_of_reference", nullable = false)
     @Lob
+    @Column(name = "terms_of_reference", nullable = false)
     private String termsOfReference;
 
     @CreatedDate
