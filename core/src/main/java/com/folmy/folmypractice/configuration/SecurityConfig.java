@@ -52,7 +52,7 @@ public class SecurityConfig {
                             .hasRole("ADMIN")
                         .requestMatchers("/api/moderator/**")
                             .hasAnyRole("MODERATOR","ADMIN")
-                        .requestMatchers("/api/user/**")
+                        .requestMatchers("/api/**")
                             .hasAnyRole("USER","MODERATOR","ADMIN")
                         .anyRequest().authenticated()
                 )

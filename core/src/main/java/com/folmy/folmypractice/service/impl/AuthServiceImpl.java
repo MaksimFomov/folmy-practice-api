@@ -3,6 +3,7 @@ package com.folmy.folmypractice.service.impl;
 import com.folmy.folmypractice.configuration.JwtUtils;
 import com.folmy.folmypractice.enums.Role;
 import com.folmy.folmypractice.exception.conflict.NameAlreadyExistsException;
+import com.folmy.folmypractice.model.DomainUserDetails;
 import com.folmy.folmypractice.model.User;
 import com.folmy.folmypractice.repository.UserRepository;
 import com.folmy.folmypractice.service.AuthService;
@@ -58,10 +59,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String login(String login, String password) {
         Authentication auth = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        login, password));
-        var principal = (org.springframework.security.core.userdetails.User)
-                auth.getPrincipal();
+                new UsernamePasswordAuthenticationToken(login, password));
+        DomainUserDetails principal = (DomainUserDetails) auth.getPrincipal();
 
         return jwtUtils.generateToken(principal);
     }

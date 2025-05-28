@@ -33,7 +33,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
-    @PostMapping("/changePassword")
+    @PostMapping("/password")
     public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequestDto changePasswordRequestDto) {
         userFacade.changePassword(changePasswordRequestDto.oldPassword(),
                 changePasswordRequestDto.newPassword());

@@ -81,6 +81,9 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "enabled")
+    private boolean enabled;
+
     @ManyToMany(mappedBy = "members")
     private List<Team> teams;
 }
