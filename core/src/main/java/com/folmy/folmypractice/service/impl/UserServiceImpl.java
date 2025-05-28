@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void passwordChange(String oldPassword, String newPassword) {
+    public void changePassword(String oldPassword, String newPassword) {
         Authentication auth = SecurityContextHolder
                 .getContext()
                 .getAuthentication();

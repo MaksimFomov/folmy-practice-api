@@ -35,7 +35,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public void passwordChange(String oldPassword, String newPassword) {
-        userService.passwordChange(oldPassword, newPassword);
+    public void changePassword(String oldPassword, String newPassword) {
+        userService.changePassword(oldPassword, newPassword);
     }
 }

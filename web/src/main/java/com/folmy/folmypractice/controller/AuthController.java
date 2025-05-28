@@ -1,7 +1,9 @@
 package com.folmy.folmypractice.controller;
 
-import com.folmy.folmypractice.model.User;
-import com.folmy.folmypractice.service.AuthService;
+import com.folmy.folmypractice.dto.LoginRequestDto;
+import com.folmy.folmypractice.dto.RegisterRequestDto;
+import com.folmy.folmypractice.facade.AuthFacade;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,21 +15,21 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    private final AuthService authService;
+    private final AuthFacade authFacade;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
+    public AuthController(AuthFacade authFacade) {
+        this.authFacade = authFacade;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        authService.register(user);
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto registerRequestDto) {
+        authFacade.register(registerRequestDto);
         return ResponseEntity.ok("User registered");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        String token = authService.login(user.getUsername(), user.getPassword());
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+        String token = authFacade.login(loginRequestDto.login(), loginRequestDto.password());
         return ResponseEntity.ok(Map.of("token", token));
     }
 }

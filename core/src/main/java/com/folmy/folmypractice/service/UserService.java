@@ -10,5 +10,5 @@ public interface UserService {
 
     User getUserByUUID(UUID userUUID);
 
-    void passwordChange(String oldPassword, String newPassword);
+    void changePassword(String oldPassword, String newPassword);
 }
